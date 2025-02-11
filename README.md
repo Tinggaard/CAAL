@@ -31,10 +31,14 @@ npm install
 To build CAAL, run the following command in the root directory.
 
 ```bash
-npm run build
+npm run build-all
 ```
 This will run the ``` build.sh ``` script, which will compile all of the Typescript files, and compile any potential changes in the Ace submodule.
 
+To run the server locally (localhost) run:
+```bash
+node server.js
+```
 
 To compile the project, run all unit tests, and zip all necessary files to run CAAL:
 ```bash
