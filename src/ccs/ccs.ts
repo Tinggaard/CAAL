@@ -474,6 +474,7 @@ module CCS {
                         // If A != C
                         result.addRelabel(firstFrom, secondTo);
                     }
+                    result.addRelabel(firstTo, secondTo); // Always keep B --second--> C relabelling
                 } else {
                     // Case 2:  A --first--> B
                     result.addRelabel(firstFrom, firstTo);
