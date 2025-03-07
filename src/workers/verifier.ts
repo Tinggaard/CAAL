@@ -31,7 +31,7 @@ messageHandlers.program = data => {
         graph = new TCCS.Graph();
         TCCSParser.parse(data.program, {ccs: CCS, tccs: TCCS, graph: graph});
     } else if (inputMode === "PCCS") {
-        graph = new TCCS.Graph();
+        graph = new PCCS.Graph();
         PCCSParser.parse(data.program, {ccs: CCS, pccs: PCCS, graph: graph});
     }
 };
