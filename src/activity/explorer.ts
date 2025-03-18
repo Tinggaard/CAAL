@@ -332,27 +332,37 @@ module Activity {
             this.centerProcess(process);
         }
 
-        private createProbabilisticNode(fromProcess: CCS.Process): void {
-            if (fromProcess instanceof PCCS.ProbabilisticProcess) {
-                this.uiGraph.showProcess(fromProcess, { label: this.graph.getLabel(fromProcess), probabalisticNode: true });
-                this.showProcessAsExplored(fromProcess);
-                var probability = fromProcess.probability;
-                fromProcess["subProcesses"].forEach(subProcess => {
-                    if (subProcess instanceof CCS.ActionPrefixProcess) {
-                        console.log(typeof subProcess);
-                        console.log(subProcess);
-                        this.uiGraph.showProcess(subProcess, { label: this.graph.getLabel(subProcess), status: "unexpanded" })
-                        this.showProcessAsExplored(subProcess); 
-                        this.uiGraph.showProcess(subProcess["nextProcess"], { label: this.graph.getLabel(subProcess["nextProcess"]), status: "unexpanded" })
-                        this.showProcessAsExplored(subProcess);
-                        this.uiGraph.showTransitions(subProcess.id, subProcess["nextProcess"].id, [{ label: subProcess["action"].toString() }]);
-                    } else if (fromProcess instanceof PCCS.ProbabilisticProcess) {
-                        this.createProbabilisticNode(subProcess);
-                    }
-                });
-                this.uiGraph.showTransitions(fromProcess.id, fromProcess.subProcesses[0].id, [{ label: "0." + probability.toString(), datas: { probability: true } }]);
-                this.uiGraph.showTransitions(fromProcess.id, fromProcess.subProcesses[1].id, [{ label: "0." + (10-probability).toString(), datas: { probability: true } }]);
+        private createProbabilisticNode(fromProcess: PCCS.ProbabilisticProcess): void {
+            this.uiGraph.showProcess(fromProcess, { label: this.graph.getLabel(fromProcess), probabalisticNode: true });
+            this.showProcessAsExplored(fromProcess);
+            var probability = fromProcess.probability;
+            fromProcess["subProcesses"].forEach(subProcess => {
+                if (subProcess instanceof CCS.ActionPrefixProcess) {
+                    this.uiGraph.showProcess(subProcess, { label: this.graph.getLabel(subProcess), status: "unexpanded" })
+                    this.showProcessAsExplored(subProcess); 
+                    this.uiGraph.showProcess(subProcess["nextProcess"], { label: this.graph.getLabel(subProcess["nextProcess"]), status: "unexpanded" })
+                    this.showProcessAsExplored(subProcess);
+                    this.uiGraph.showTransitions(subProcess.id, subProcess["nextProcess"].id, [{ label: subProcess["action"].toString() }]);
+                } else if (subProcess instanceof PCCS.ProbabilisticProcess) {
+                    this.createProbabilisticNode(subProcess);
+                }
+            });
+            probability = probability
+            this.uiGraph.showTransitions(fromProcess.id, fromProcess.subProcesses[0].id, [{ label: "0." + probability, datas: { probability: true } }]);
+            this.uiGraph.showTransitions(fromProcess.id, fromProcess.subProcesses[1].id, [{ label: "0." + this.invertProbability(probability), datas: { probability: true } }]);
+        }
+
+        private invertProbability(decimals) {
+            let factor = 10 ** decimals.length;
+    
+            let num = parseInt(decimals, 10);
+            let complement = (factor - num).toString();
+
+            while (complement.length < decimals.length) {
+                complement += "0"; // Add leading zeros
             }
+
+            return complement;
         }
 
         private updateStatusTable(transitions: CCS.Transition[]): void {

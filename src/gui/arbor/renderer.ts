@@ -8,7 +8,7 @@ class Renderer {
     public ctx : CanvasRenderingContext2D;
     public gfx : any; // Graphics lib
     public particleSystem : ParticleSystem = null;
-    
+
     private nodeStatusColors = {
         "unexpanded": "rgb(160,160,160)",
         "expanded": "rgb(51, 65, 185)",
@@ -75,6 +75,7 @@ class Renderer {
                 return str.length > 10 ? str.substring(0,8) + ".." : str;
             }
             var label = strShorten(edge.data.datas.map((data) => data.label).join(","));
+
             this.ctx.save();
             if (edge.data.highlight){
                 this.ctx.lineWidth = edge.data.lineWidth || this.highlightSettings.lineWidth; // Edge line width
@@ -160,7 +161,7 @@ class Renderer {
         this.ctx.moveTo(tail.x, tail.y);
         this.ctx.lineTo(head.x, head.y);
         this.ctx.stroke();
-        
+
         // Draw the label
         if (label){ //draw the label on edge
             var offsetAngle = Math.atan2(-(pt2.y - pt1.y), pt2.x - pt1.x) + Math.PI*0.5;
@@ -239,13 +240,13 @@ class Renderer {
         // draw a circle centered at pt
         var label = node.data.label || "";
         var textWidth = this.ctx.measureText(label).width + 30;
-        
+
         if (label && label.length > 10) {
             label = node.data.label = label.substring(0,8) + "..";
         }
-        
+
         this.ctx.fillStyle = this.nodeStatusColors[node.data.status] || this.nodeStatusColors["expanded"];
-        
+
         this.gfx.rect(pt.x-textWidth/2, pt.y-10, textWidth, 26, 8, {fill:this.ctx.fillStyle}); // draw the node rect
         this.nodeBoxes[node.name] = [pt.x-textWidth/2, pt.y-11, textWidth, 28]; // save the bounds of the node-rect for drawing the edges correctly.
 
