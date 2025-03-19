@@ -8,7 +8,7 @@ class Renderer {
     public ctx : CanvasRenderingContext2D;
     public gfx : any; // Graphics lib
     public particleSystem : ParticleSystem = null;
-    
+
     private nodeStatusColors = {
         "unexpanded": "rgb(160,160,160)",
         "expanded": "rgb(51, 65, 185)",
@@ -59,6 +59,11 @@ class Renderer {
             // pt1:  {x:#, y:#}  source position in screen coords
             // pt2:  {x:#, y:#}  target position in screen coords
             // draw a line from pt1 to pt2
+            if (edge.data.datas[0].datas?.probability) { // if the edge is a probabilistic edge, draw a dashed line.
+                this.ctx.setLineDash([5, 5]);
+            } else {
+                this.ctx.setLineDash([]);
+            }
             var arrowLength = 13;
             var arrowWidth = 6;
             var chevronColor = "#4D4D4D";
